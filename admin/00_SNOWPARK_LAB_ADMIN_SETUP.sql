@@ -45,7 +45,7 @@ CREATE OR REPLACE WAREHOUSE tb_de_wh
     WAREHOUSE_SIZE = 'large' -- Large for initial data load - scaled down to XSmall at end of this scripts
     WAREHOUSE_TYPE = 'standard'
     AUTO_SUSPEND = 60
-    MAX_CLUSTER_COUNT = 10
+    MAX_CLUSTER_COUNT = 5
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
 COMMENT = 'data engineering warehouse for tasty bytes';
@@ -54,7 +54,7 @@ CREATE OR REPLACE WAREHOUSE tb_dev_wh
     WAREHOUSE_SIZE = 'xsmall'
     WAREHOUSE_TYPE = 'standard'
     AUTO_SUSPEND = 60
-    MAX_CLUSTER_COUNT = 10
+    MAX_CLUSTER_COUNT = 5
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
 COMMENT = 'developer warehouse for tasty bytes';
@@ -147,11 +147,6 @@ USE WAREHOUSE tb_de_wh;
 
 CREATE OR REPLACE FILE FORMAT tb_101.public.csv_ff 
 type = 'csv';
-
-CREATE OR REPLACE STAGE tb_101.public.s3load
-COMMENT = 'Quickstarts S3 Stage Connection'
-url = 's3://sfquickstarts/frostbyte_tastybytes/'
-file_format = tb_101.public.csv_ff;
 
 /*--
  raw zone table build 
@@ -277,48 +272,6 @@ CREATE OR REPLACE VIEW tb_101.analytics.customer_loyalty_metrics_v
 COMMENT = 'Tasty Bytes Customer Loyalty Member Metrics View'
     AS
 SELECT * FROM tb_101.harmonized.customer_loyalty_metrics_v;
-
-/*--
- raw zone table load 
---*/
-
--- country table load
-COPY INTO tb_101.raw_pos.country
-FROM @tb_101.public.s3load/raw_pos/country/;
-
--- franchise table load
-COPY INTO tb_101.raw_pos.franchise
-FROM @tb_101.public.s3load/raw_pos/franchise/;
-
--- location table load
-COPY INTO tb_101.raw_pos.location
-FROM @tb_101.public.s3load/raw_pos/location/;
-
--- menu table load
-COPY INTO tb_101.raw_pos.menu
-FROM @tb_101.public.s3load/raw_pos/menu/;
-
--- truck table load
-COPY INTO tb_101.raw_pos.truck
-FROM @tb_101.public.s3load/raw_pos/truck/;
-
--- customer_loyalty table load
-COPY INTO tb_101.raw_customer.customer_loyalty
-FROM @tb_101.public.s3load/raw_customer/customer_loyalty/;
-
--- order_header table load
-COPY INTO tb_101.raw_pos.order_header
-FROM @tb_101.public.s3load/raw_pos/order_header/;
-
--- order_detail table load
-COPY INTO tb_101.raw_pos.order_detail
-FROM @tb_101.public.s3load/raw_pos/order_detail/;
-
-ALTER WAREHOUSE tb_de_wh SET WAREHOUSE_SIZE = 'XSmall';
-
--- setup completion note
-SELECT 'tb_101 setup is now complete' AS note;
-
 
 
 /* ================ */
