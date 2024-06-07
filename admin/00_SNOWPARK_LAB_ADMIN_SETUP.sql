@@ -178,11 +178,11 @@ AS SELECT * FROM tb_101_share.raw_pos.order_header;
 
 -- order_detail table build
 CREATE OR REPLACE TABLE tb_101.raw_pos.order_detail 
-AS SELECT * FROM tb_101_share.raw_pos.counorder_detailtry;
+AS SELECT * FROM tb_101_share.raw_pos.order_detail;
 
 -- customer loyalty table build
 CREATE OR REPLACE TABLE tb_101.raw_customer.customer_loyalty
-AS SELECT * FROM tb_101_share.raw_pos.customer_loyalty;
+AS SELECT * FROM tb_101_share.raw_customer.customer_loyalty;
 
 /*--
  • harmonized view creation
@@ -317,4 +317,4 @@ GRANT APPLY TAG ON ACCOUNT TO ROLE tasty_test_role;
 GRANT APPLY MASKING POLICY ON ACCOUNT TO ROLE tastybytes_admin;
 GRANT APPLY TAG ON ACCOUNT TO ROLE tastybytes_admin;
 
-/* MUST GRANT tastybytes_admin ROLE TO ALL LAB PARTICIPANTS */
+/* MUST GRANT tastybytes_admin, tb_data_engineer, tb_admin, tb_dev ROLES TO ALL LAB PARTICIPANTS */
