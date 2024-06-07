@@ -1,10 +1,41 @@
+![rogers-snowflake](/img/Screenshot%202024-06-07%20at%203.21.17%E2%80%AFPM.png)
+# Hands-On Lab 2024-06-26 - Snowflake Fundamentals+
 
-> # Rogers HOL Day 1 - Fundamentals + Data Engineering
+## Intro Presentation: Snowflake 101
+  * Background on Snowflake's 10-year evolution
+  * System Defined Roles and Privileges, Role Based Access Control
+  * Storage, Caching and time travel
+  * Cloud services layer, Information Schema, SNOWFLAKE database, Query History
+  * Lab Setup and Explanation
 
-## AGENDA
+## Hands-On Lab Part 1: Snowflake Basics
+* Explore UI, Databases, Objects
+* Virtual Warehouses and Settings
+* Development: Zero Copy Cloning, Time-Travel for Table Restore, Table Swap, Drop and Undrop
+* Basic Dashboarding
+* Semi-Structured Data
+* Semi-Structured Data and the Variant Data Type
+* Querying Semi-Structured Data via Dot and Bracket Notation + Flatten
+* Providing Flattened Data to Business Users 
 
-* Intros (20 min presentation) [[slides]](https://github.com/sfc-gh-mwies/sunlife-hol/blob/main/Day1/Slides/1%20-%20Innovation%20Sprint%20Snowflake%20Intro%20-%20Sun%20Life%20-%20June%202024.pdf)
-* Snowflake Tech Deep Dive (60 min presentation) [[slides]](https://github.com/sfc-gh-mwies/sunlife-hol/blob/main/Day1/Slides/2%20-%20Technical%20Deep%20Dive%20-%20Sun%20Life%20-%20June%202024.pdf)
-* Hands-On [Zero to Snowflake](https://github.com/sfc-gh-mwies/sunlife-hol/tree/main/Day1/01%20-%20zero-to-snowflake) 
-* Snowpark Python Deep Dive (30 min presentation) [[slides]](https://github.com/sfc-gh-mwies/sunlife-hol/blob/main/Day1/Slides/4%20-%20Data%20Engineering%20with%20Snowpark%20Python%20-%20Sun%20Life%20HOL.pdf)
-* Hands-On [Data Engineering w. Snowpark Python](https://github.com/sfc-gh-mwies/sunlife-hol/tree/main/Day1/02%20-%20data-engineering-snowpark) 
+## Hands-On Lab Part 2
+
+### Data Engineering
+* Data Engineering Pipelines: Streams, Tasks & Dynamic Tables
+* Stored Procedures, User-Defined Functions
+
+### Data Governance
+* Dynamic Data Masking and Row-Access Policies
+
+### Collaboration
+* Quick secure data sharing example (direct share from Snowflake demo account)
+* Investigating Days with Zero Sales
+* Acquiring Weather Source Data from the Snowflake Marketplace 
+* Democratizing Data for Business Users
+
+### Geospatial
+* Creating Geography Points from Latitude and Longitude
+* Calculating Straight Line Distance between Points
+* Collecting Coordinates, Creating a Bounding Polygon & Finding its Center Point
+* Finding Locations Furthest Away from our Top Selling Hub
+* Geospatial Analysis with H3 (Hexagonal Hierarchical Geospatial Indexing System)
