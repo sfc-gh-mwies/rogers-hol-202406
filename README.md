@@ -21,10 +21,10 @@
 
 ## Hands-On Lab Part 2
 
-### 02 - [Data Governance](/02%20-%20Governance.sql)
+### [02 - Data Governance](/02%20-%20Governance.sql)
 * Dynamic Data Masking and Row-Access Policies
 
-### 03 - [Data Engineering](03%20-%20Data%20Pipelines.sql)
+### [03 - Data Engineering](03%20-%20Data%20Pipelines.sql)
 * Data Engineering Pipelines: Streams, Tasks & Dynamic Tables
 * Stored Procedures, User-Defined Functions
 
