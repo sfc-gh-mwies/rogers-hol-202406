@@ -8,7 +8,8 @@
   * Cloud services layer, Information Schema, SNOWFLAKE database, Query History
   * Lab Setup and Explanation
 
-## [Hands-On Lab Part 1](/01%20-%20zero-to-snowflake): 01 - Snowflake Basics
+## [Hands-On Lab Part 1](/01%20-%20zero-to-snowflake)
+### 01 - Snowflake Basics
 * Explore UI, Databases, Objects
 * Virtual Warehouses and Settings
 * Development: Zero Copy Cloning, Time-Travel for Table Restore, Table Swap, Drop and Undrop
