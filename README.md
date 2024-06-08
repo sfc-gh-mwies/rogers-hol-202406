@@ -8,8 +8,8 @@
   * Cloud services layer, Information Schema, SNOWFLAKE database, Query History
   * Lab Setup and Explanation
 
-## [Hands-On Lab Part 1](/01%20-%20zero-to-snowflake)
-### 01 - Snowflake Basics
+## Hands-On Lab Part 1
+### [01 - Snowflake Basics](/01%20-%20zero-to-snowflake)
 * Explore UI, Databases, Objects
 * Virtual Warehouses and Settings
 * Development: Zero Copy Cloning, Time-Travel for Table Restore, Table Swap, Drop and Undrop
@@ -19,12 +19,12 @@
 * Querying Semi-Structured Data via Dot and Bracket Notation + Flatten
 * Providing Flattened Data to Business Users 
 
-## [Hands-On Lab Part 2](/02%20-%20governance-collaboration-geospatial)
+## Hands-On Lab Part 2
 
-### 02 - Data Governance
+### 02 - [Data Governance](/02%20-%20Governance.sql)
 * Dynamic Data Masking and Row-Access Policies
 
-### 03 - Data Engineering
+### 03 - [Data Engineering](03%20-%20Data%20Pipelines.sql)
 * Data Engineering Pipelines: Streams, Tasks & Dynamic Tables
 * Stored Procedures, User-Defined Functions
 
