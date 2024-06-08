@@ -1,3 +1,4 @@
+![rogers-snowflake](../img/Screenshot%202024-06-07%20at%203.21.17%E2%80%AFPM.png)
 # Getting Started with Snowflake - Zero to Snowflake
 
 ## Overview
