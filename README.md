@@ -9,7 +9,7 @@
   * Lab Setup and Explanation
 
 ## Hands-On Lab Part 1
-### [01 - Snowflake Basics](/01%20-%20Snowflake%20Fundamentals)
+### [01 - Snowflake Fundamentals](/01%20-%20Snowflake%20Fundamentals)
 * Explore UI, Databases, Objects
 * Virtual Warehouses and Settings
 * Development: Zero Copy Cloning, Time-Travel for Table Restore, Table Swap, Drop and Undrop
