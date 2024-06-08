@@ -28,13 +28,13 @@
 * Data Engineering Pipelines: Streams, Tasks & Dynamic Tables
 * Stored Procedures, User-Defined Functions
 
-### 04 - Collaboration
+### [04 - Collaboration](/04%20-%20Collaboration)
 * Quick secure data sharing example (direct share from Snowflake demo account)
 * Investigating Days with Zero Sales
 * Acquiring Weather Source Data from the Snowflake Marketplace 
 * Democratizing Data for Business Users
 
-### 05 - Geospatial
+### [05 - Geospatial](/05%20-%20Geospatial)
 * Creating Geography Points from Latitude and Longitude
 * Calculating Straight Line Distance between Points
 * Collecting Coordinates, Creating a Bounding Polygon & Finding its Center Point
