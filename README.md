@@ -9,7 +9,7 @@
   * Lab Setup and Explanation
 
 ## Hands-On Lab Part 1
-### [01 - Snowflake Basics](/01%20-%20zero-to-snowflake)
+### [01 - Snowflake Basics](/01%20-%20Snowflake$20Fundamentals)
 * Explore UI, Databases, Objects
 * Virtual Warehouses and Settings
 * Development: Zero Copy Cloning, Time-Travel for Table Restore, Table Swap, Drop and Undrop
@@ -21,10 +21,10 @@
 
 ## Hands-On Lab Part 2
 
-### [02 - Data Governance](/02%20-%20Governance.sql)
+### [02 - Data Governance](/02%20-%20Governance)
 * Dynamic Data Masking and Row-Access Policies
 
-### [03 - Data Engineering](03%20-%20Data%20Pipelines.sql)
+### [03 - Data Engineering](03%20-%20Data%20Engineering)
 * Data Engineering Pipelines: Streams, Tasks & Dynamic Tables
 * Stored Procedures, User-Defined Functions
 
