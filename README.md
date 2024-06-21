@@ -21,7 +21,7 @@
 
 ## Hands-On Lab Part 2
 
-### [02 - Data Governance](/02%20-%20Governance)
+### [02 - Data Governance](https://github.com/sfc-gh-mwies/rogers-hol-202406/tree/main/02%20-%20Governance)
 * Dynamic Data Masking and Row-Access Policies
 
 ### [03 - Data Engineering](03%20-%20Data%20Engineering)
