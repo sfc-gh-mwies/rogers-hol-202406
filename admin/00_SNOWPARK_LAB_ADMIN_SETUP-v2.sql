@@ -28,10 +28,6 @@ Date(yyyy-mm-dd)    Author              Comments
 
 USE ROLE accountadmin;
 
--- create frostbyte_tasty_bytes_v2 database
-CREATE OR REPLACE DATABASE frostbyte_tasty_bytes_setup_s from share FROSTBYTE_V2.0_DEMO_DATA_RARKASC;
-GRANT IMPORTED PRIVILEGES ON DATABASE frostbyte_tasty_bytes_setup_s TO ROLE SYSADMIN;
-
 USE ROLE sysadmin; 
 
 -- this is here to confirm sysadmin is being used for database creation below.
@@ -357,31 +353,31 @@ ALTER WAREHOUSE demo_build_wh SET warehouse_size = '3X-Large';
 -- raw_pos table build
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.country
   AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.country;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.country;
 
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.franchise
   AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.franchise;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.franchise;
 
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.location
   AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.location;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.location;
 
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.menu
   AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.menu;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.menu;
 
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.truck
   AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.truck;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.truck;
 
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.order_header
   AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.order_header;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.order_header;
 
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.order_detail
   AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.order_detail;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.order_detail;
 
 -- raw_customer table build
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_customer.customer_loyalty
@@ -979,7 +975,7 @@ BEGIN
 INSERT INTO frostbyte_tasty_bytes_v2.raw_pos.order_header
 (
     SELECT * 
-    FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.order_header
+    FROM frostbyte_tasty_bytes_setup_s.raw_pos.order_header
     WHERE DATE(order_ts) >
         (SELECT MAX(order_ts) FROM frostbyte_tasty_bytes_v2.raw_pos.order_header)
 );
@@ -987,7 +983,7 @@ INSERT INTO frostbyte_tasty_bytes_v2.raw_pos.order_header
 INSERT INTO frostbyte_tasty_bytes_v2.raw_pos.order_detail
 (
     SELECT * 
-    FROM frostbyte_tasty_bytes_setup_s.raw_pos_v2.order_detail
+    FROM frostbyte_tasty_bytes_setup_s.raw_pos.order_detail
     WHERE order_id NOT IN 
         (SELECT DISTINCT order_id FROM frostbyte_tasty_bytes_v2.raw_pos.order_detail)
 );
