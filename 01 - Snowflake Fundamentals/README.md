@@ -352,7 +352,9 @@ Upload all of the files from the [sec filing attributes data set](https://github
 
 We will now use a warehouse to load the data from an S3 bucket into the tables we created earlier. In the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet, execute the `COPY` command below to load the data.
 
-Note that you can specify a `FILE FORMAT` object inline in the command. In the previous section where we loaded structured data in CSV format, we had to define a file format to support the CSV structure. Because the JSON data here is well-formed, we are able to simply specify the JSON type and use all the default settings:
+Two Things to Note:
+* This time, the `FILE FORMAT` is specified in-line. In the previous section, we had to define a csv file format to support the CSV structure. Because the JSON data here is well-formed, we are able to simply specify the type and use default settings
+* In the second `COPY` statement, we exclude the end of the file name. This will tell Snowflake to load all files, similar to adding a wildcard character at the end.
 
 ```SQL
 COPY INTO sec_filings_index
@@ -360,7 +362,7 @@ FROM @cybersyn_sec_filings/cybersyn_sec_report_index.json.gz
     file_format = (type = json strip_outer_array = true);
 
 COPY INTO sec_filings_attributes
-FROM @cybersyn_sec_filings/cybersyn_sec_report_attributes.json.gz
+FROM @cybersyn_sec_filings/cybersyn_sec_report_attributes
     file_format = (type = json strip_outer_array = true);
 ```
 
