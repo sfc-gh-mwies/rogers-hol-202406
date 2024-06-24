@@ -228,9 +228,9 @@ In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_company_m
 
 ![create stage settings](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/create_managed_stage.png)
 
-In the database explorer, click on your new stage (you may need to click the ellipses (...) and 'Refresh')
-From the top right corner.
-Click the '+ Files' button and add the cybersyn_consumer_company_metadata.csv 
+In the database explorer, click on your new stage -- you may need to click the ellipses (...) and 'Refresh'.
+
+From the top right corner, click the '+ Files' button and add the cybersyn_consumer_company_metadata.csv 
 
 ![Load File to Stage](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/upload_to_stage.png)
 
@@ -242,9 +242,7 @@ Add the following SQL statement below the previous code and then execute:
 LIST @cybersyn_company_metadata;
 ```
 
-In the results in the bottom pane, you should see the list of files in the stage:
-
-![worksheet result](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_10.png?raw=true)
+In the results in the bottom pane, you should see the list of files in the stage
 
 ### Create a File Format
 
@@ -287,11 +285,13 @@ Now we can run a COPY command to load the data into the `COMPANY_METADATA` table
 Navigate back to the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet in the **Worksheets** tab. Make sure the worksheet context is correctly set:
 
 **Role:** `SNOWPARK_HOL_ROLE`
+
 **Warehouse:** `SNOWPARK_HOL_VWH`
+
 **Database:** `<firstname>_<lastname>_CYBERSYN`
+
 **Schema:** `PUBLIC`
 
-![worksheet context](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/5Load_4.png?raw=true)
 
 Execute the following statements in the worksheet to load the staged data into the table. This may take up to 30 seconds.
 
@@ -308,7 +308,7 @@ Next, navigate to the **Query History** tab by clicking the **Home** icon and th
 
 ## 2.Loading Semi-Structured Data into Snowflake: JSONs
 
->  This section requires loading additional data and, therefore, provides a review of data loading while also introducing loading semi-structured data.
+>  This section introduces loading semi-structured data.
 
 Going back to the lab's example, our company's analytics team wants to evaluate the performance of CPG companies through the lens of their reported metrics in SEC filings. To do this, in this section, we will:
 
@@ -326,9 +326,9 @@ Snowflake can easily load and query semi-structured data such as JSON, Parquet, 
 
 ### Create a New Table for the Data
 
->  **Executing Multiple Commands** Remember that you need to execute each command individually. However, you can execute them in sequence together by selecting all of the commands and then clicking the **Play/Run** button (or using the keyboard shortcut).
+Next, let's create two tables, `SEC_FILINGS_INDEX` and `SEC_FILINGS_ATTRIBUTES` to use for loading JSON data. In the worksheet, execute the following `CREATE TABLE` commands...
 
-Next, let's create two tables, `SEC_FILINGS_INDEX` and `SEC_FILINGS_ATTRIBUTES` to use for loading JSON data. In the worksheet, execute the following `CREATE TABLE` commands:
+>  **Executing Multiple Commands** Remember that you need to execute each command. However, you can execute them together by selecting all of the commands and then clicking the **Play/Run** button (or using the keyboard shortcut).
 
 ```SQL
 CREATE TABLE sec_filings_index (v variant);
@@ -346,40 +346,16 @@ In the results pane at the bottom of the worksheet, verify that your tables, `SE
 ![success message](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/7SemiStruct_2_1.png?raw=true)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Load and Verify the Semi-structured Data
 
-Download [cybersyn_sec_report_attributes files](https://github.com/sfc-gh-mwies/rogers-hol-202406/tree/main/01%20-%20Snowflake%20Fundamentals/data/cybersyn_sec_report_attributes) (click the 'Download Raw File' button for each file)
+* Download all [cybersyn_sec_report_attributes](https://github.com/sfc-gh-mwies/rogers-hol-202406/tree/main/01%20-%20Snowflake%20Fundamentals/data/cybersyn_sec_report_attributes) files (click the 'Download Raw File' button for each file)
 
+>  **CREATE ANOTHER STAGE**
 From the **Databases** tab, click the `<firstname>_<lastname>_CYBERSYN` database and `PUBLIC` schema. Click the **Create** button, then **Stage** > **Snowflake Managed**.
 
 ![stages create](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_8.png?raw=true)
 
 In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_sec_report_data`
-
-![create stage settings](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/create_managed_stage.png)
 
 In the database explorer, click on your new stage (again, you may need to click the ellipses (...) and 'Refresh')
 From the top right corner.
