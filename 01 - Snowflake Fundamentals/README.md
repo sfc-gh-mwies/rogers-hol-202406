@@ -229,7 +229,8 @@ In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_company_m
 ![create stage settings](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/create_managed_stage.png)
 
 In the database explorer, click on your new schema (you may need to click the ellipses (...) and 'Refresh')
-From the top right corner, click the '+ Files' button and add the cybersyn_consumer_company_metadata.csv 
+From the top right corner.
+Click the '+ Files' button and add the cybersyn_consumer_company_metadata.csv 
 
 ![Load File to Stage](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/upload_to_stage.png)
 
