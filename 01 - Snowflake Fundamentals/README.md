@@ -312,10 +312,10 @@ Next, navigate to the **Query History** tab by clicking the **Home** icon and th
 
 Going back to the lab's example, our company's analytics team wants to evaluate the performance of CPG companies through the lens of their reported metrics in SEC filings. To do this, in this section, we will:
 
-- Load SEC filing data in semi-structured JSON format held in a public S3 bucket.
+- Load SEC filing data in semi-structured JSON format.
 - Create a view and query the JSON data using SQL dot notation.
 
-The JSON data consists of SEC filings provided by *Cybersyn*, detailing the historical performance of consumer-packaged goods companies from 2019-2023. It is also staged on AWS S3. If viewed in a text editor, the raw JSON in the GZ files looks like:
+The JSON data consists of SEC filings provided by *Cybersyn*, detailing the historical performance of consumer-packaged goods companies from 2019-2023. If viewed in a text editor, the raw JSON in the GZ files looks like:
 
 ![raw JSON sample](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/7SemiStruct_1_1.png?raw=true)
 
@@ -347,27 +347,12 @@ In the results pane at the bottom of the worksheet, verify that your tables, `SE
 
 ### Load and Verify the Semi-structured Data
 
+Again, we will use the Snowsight UI to manually upload the data into the tables we created earlier.
+
 Upload all of the files from the [sec filing attributes data set](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/path-to-files)
 ![Upload JSON Files](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/upload_many_to_stage.png)
 
-We will now use a warehouse to load the data from an S3 bucket into the tables we created earlier. In the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet, execute the `COPY` command below to load the data.
-
-Two Things to Note:
-* This time, the `FILE FORMAT` is specified in-line. In the previous section, we had to define a csv file format to support the CSV structure. Because the JSON data here is well-formed, we are able to simply specify the type and use default settings
-* In the second `COPY` statement, we exclude the end of the file name. This will tell Snowflake to load all files, similar to adding a wildcard character at the end.
-
-```SQL
-COPY INTO sec_filings_index
-FROM @cybersyn_sec_filings/cybersyn_sec_report_index.json.gz
-    file_format = (type = json strip_outer_array = true);
-
-COPY INTO sec_filings_attributes
-FROM @cybersyn_sec_filings/cybersyn_sec_report_attributes
-    file_format = (type = json strip_outer_array = true);
-```
-
-Verify that each file has a status of `LOADED`:
-![query result](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/7SemiStruct_4_1.png?raw=true)
+And do the same for the SEC Filings Index Data
 
 Now, let's take a look at the data that was loaded:
 ```SQL
