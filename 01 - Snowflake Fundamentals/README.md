@@ -345,25 +345,10 @@ In the results pane at the bottom of the worksheet, verify that your tables, `SE
 
 ![success message](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/7SemiStruct_2_1.png?raw=true)
 
-### Create Another External Stage
-
-In the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet, use the following command to create a stage that points to the bucket where the semi-structured JSON data is stored on AWS S3:
-
-```SQL
-CREATE STAGE cybersyn_sec_filings
-url = 's3://sfquickstarts/zero_to_snowflake/cybersyn_cpg_sec_filings/';
-```
-
-Now let's take a look at the contents of the `cybersyn_sec_filings` stage. Execute the following `LIST` command to display the list of files:
-
-```SQL
-LIST @cybersyn_sec_filings;
-```
-
-In the results pane, you should see a list of `.gz` files from S3:
-![results output](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/7SemiStruct_3_1.png?raw=true)
-
 ### Load and Verify the Semi-structured Data
+
+Upload all of the files from the [sec filing attributes data set](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/path-to-files)
+![Upload JSON Files](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/upload_many_to_stage.png)
 
 We will now use a warehouse to load the data from an S3 bucket into the tables we created earlier. In the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet, execute the `COPY` command below to load the data.
 
