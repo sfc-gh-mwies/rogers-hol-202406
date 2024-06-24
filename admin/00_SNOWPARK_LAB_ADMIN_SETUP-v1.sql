@@ -25,8 +25,7 @@ USE ROLE sysadmin;
  • database, schema and warehouse creation
 --*/
 
--- create tb_101 database
-CREATE OR REPLACE DATABASE tb_101 from share tb_101_share;
+-- create a database named "tb_101_share" from the share titled "tb_101";
 
 -- create raw_pos schema
 CREATE OR REPLACE SCHEMA tb_101.raw_pos;
@@ -83,6 +82,7 @@ USE ROLE accountadmin;
 GRANT IMPORTED PRIVILEGES ON DATABASE snowflake TO ROLE tb_data_engineer;
 
 GRANT CREATE WAREHOUSE ON ACCOUNT TO ROLE tb_admin;
+GRANT CREATE DATABASE ON ACCOUNT TO ROLE tb_admin;
 
 USE ROLE securityadmin;
 

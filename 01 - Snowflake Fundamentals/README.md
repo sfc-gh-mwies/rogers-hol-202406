@@ -120,7 +120,7 @@ The **Users** sub-tab of the **Users & Roles** tab shows a list of users in the 
 ---
 
 >  **USER MENU**
-Clicking on your username in the bottom right of the UI allows you to change your password, roles, and preferences. Snowflake has several system defined roles. You are currently in the default role of `SNOWPARK_HOL_ROLE` and will stay in this role for the majority of the lab.
+Clicking on your username in the bottom left of the UI allows you to change your password, roles, and preferences. Snowflake has several system defined roles. You may switch to the role of `TB_ADMIN` as we will stay in this role for the majority of the lab.
 
 ![user preferences dropdown](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/3UIStory_14.png?raw=true)
  
@@ -149,7 +149,7 @@ We are using company metadata developed from the Securities and Exchange Commiss
 Data can be ingested into Snowflake from many locations by using the `COPY` command, Snowpipe auto-ingestion, external connectors, or third-party ETL/ELT solutions. For more information on getting data into Snowflake, see the [Snowflake documentation](https://docs.snowflake.net/manuals/user-guide-data-load.html). For the purposes of this lab, we use the Snowfsight UI to load data manually. In a real-world scenario, you would more likely use an ETL solution or grab data directly from the Snowflake Marketplace!
 
 ### Create a Database and Table
-Ensure you are using the `SNOWPARK_HOL_ROLE` role by selecting your name at the top left, **Switch Role** > **SNOWPARK_HOL_ROLE**.
+Ensure you are using the `TB_ADMIN` role by selecting your name at the bottom left, **Switch Role** > **TB_ADMIN**.
 
 Navigate to the **Databases** tab. Click **Create**, name the database `<firstname>_<lastname>_CYBERSYN`, then click **CREATE**.
 
@@ -163,14 +163,16 @@ We need to set the context appropriately within the worksheet. In the upper righ
 
 Select the following context settings:
 
-**Role:** `SNOWPARK_HOL_ROLE`
-**Warehouse:** `SNOWPARK_HOL_VWH`
+**Role:** `TB_ADMIN`
+
+**Warehouse:** `TB_DE_WH`
 
 ![context role and warehouse settings](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_4.png?raw=true)
 
 Next, in the drop-down for the database, select the following context settings:
 
 **Database:** `<firstname>_<lastname>_CYBERSYN`
+
 **Schema:** `PUBLIC`
 
 ![context database settings](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_4b.png?raw=true)
@@ -183,6 +185,7 @@ To make working in the worksheet easier, let's rename it. In the top left corner
 Next we create a table called `COMPANY_METADATA` to use for loading the comma-delimited data. Instead of using the UI, we use the worksheet to run the DDL that creates the table. Copy the following SQL text into your worksheet:
 
 ```SQL
+USE ROLE TB_ADMIN;
 CREATE OR REPLACE TABLE company_metadata
 (cybersyn_company_id string,
 company_name string,
@@ -208,7 +211,7 @@ Verify your `COMPANY_METADATA` table has been created. At the bottom of the work
 
 ![TRIPS confirmation message](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_5.png?raw=true)
 
-Navigate to the **Databases** tab by clicking the **HOME** icon in the upper left corner of the worksheet. Then click **Data** > **Databases**. In the list of databases, click `<firstname>_<lastname>_CYBERSYN` > `PUBLIC` > **TABLES** to see your newly created `COMPANY_METADATA` table.
+Navigate to the **Databases** tab by clicking the **HOME** icon in the upper left corner of the worksheet. Then click **Data** > **Databases**. In the list of databases, click `<firstname>_<lastname>_CYBERSYN` > `PUBLIC` > **TABLES** to see your newly created `COMPANY_METADATA` table (you may need to refresh the screen, or click the ellipses '...' and refresh).
 
 ![TRIPS table](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_6.png?raw=true)
 
@@ -218,13 +221,14 @@ Click `COMPANY_METADATA` and the **Columns** tab to see the table structure you 
 
 ### Load the Table from a File
 
-Download [cybersyn_consumer_company_metadata.csv](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/01%20-%20Snowflake%20Fundamentals/cybersyn_consumer_company_metadata.csv) (click the 'Download Raw File' button)
+Download [cybersyn_consumer_company_metadata.csv](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/01%20-%20Snowflake%20Fundamentals/data/cybersyn_consumer_company_metadata.csv) (Right Click to open in a new tab)
 
 From the **Databases** tab, click the `<firstname>_<lastname>_CYBERSYN` database and `PUBLIC` schema. Click the **Create** button, then **Stage** > **Snowflake Managed**.
 
 ![stages create](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_8.png?raw=true)
 
 In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_company_metadata`
+* Leave all other fields as the defaults
 
 ![create stage settings](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/create_managed_stage.png)
 
@@ -271,7 +275,7 @@ CREATE OR REPLACE FILE FORMAT csv
 Verify the file format has been created with the correct settings by executing the following command:
 
 ```SQL
-SHOW FILE FORMATS IN DATABASE cybersyn;
+SHOW FILE FORMATS IN DATABASE <firstname>_<lastname>_cybersyn;
 ```
 
 The file format created should be listed in the result:
@@ -284,9 +288,9 @@ Now we can run a COPY command to load the data into the `COMPANY_METADATA` table
 
 Navigate back to the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet in the **Worksheets** tab. Make sure the worksheet context is correctly set:
 
-**Role:** `SNOWPARK_HOL_ROLE`
+**Role:** `TB_ADMIN`
 
-**Warehouse:** `SNOWPARK_HOL_VWH`
+**Warehouse:** `TB_DE_WH`
 
 **Database:** `<firstname>_<lastname>_CYBERSYN`
 
@@ -319,7 +323,7 @@ The JSON data consists of SEC filings provided by *Cybersyn*, detailing the hist
 
 ![raw JSON sample](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/7SemiStruct_1_1.png?raw=true)
 
-_(The full dataset available [**for free**](https://app.snowflake.com/marketplace/listing/GZTSZAS2KH9/) in Snowflake Marketplace from Cybersyn -- no ETL required. For the purposes of this demo, we will focus on working with the semi-structured JSON file to learn how to load structured data into Snowflake.)_
+_(The full dataset available [**for free**](https://app.snowflake.com/marketplace/listing/GZTSZAS2KH9/) in Snowflake Marketplace from Cybersyn -- no ETL required. For the purposes of this demo, we will focus on working with the semi-structured JSON file to learn how to load semi-structured data into Snowflake.)_
 
 >  **SEMI-STRUCTURED DATA**
 Snowflake can easily load and query semi-structured data such as JSON, Parquet, or Avro without transformation. This is a key Snowflake feature because an increasing amount of business-relevant data being generated today is semi-structured, and many traditional data warehouses cannot easily load and query such data. Snowflake makes it easy!
@@ -328,7 +332,7 @@ Snowflake can easily load and query semi-structured data such as JSON, Parquet, 
 
 Next, let's create two tables, `SEC_FILINGS_INDEX` and `SEC_FILINGS_ATTRIBUTES` to use for loading JSON data. In the worksheet, execute the following `CREATE TABLE` commands...
 
->  **Executing Multiple Commands** Remember that you need to execute each command. However, you can execute them together by selecting all of the commands and then clicking the **Play/Run** button (or using the keyboard shortcut).
+>  **Executing Multiple Commands:** Remember that you need to execute each command. However, you can execute them together by selecting all of the commands and then clicking the **Play/Run** button (or using the keyboard shortcut).
 
 ```SQL
 CREATE TABLE sec_filings_index (v variant);
@@ -348,14 +352,14 @@ In the results pane at the bottom of the worksheet, verify that your tables, `SE
 
 ### Load and Verify the Semi-structured Data
 
-* Download all [cybersyn_sec_report_attributes](https://github.com/sfc-gh-mwies/rogers-hol-202406/tree/main/01%20-%20Snowflake%20Fundamentals/data/cybersyn_sec_report_attributes) files (click the 'Download Raw File' button for each file)
+* Download all [cybersyn_sec_report data](https://github.com/sfc-gh-mwies/rogers-hol-202406/tree/main/01%20-%20Snowflake%20Fundamentals/data/cybersyn_sec_report_data) files (click the 'Download Raw File' button for each file)
 
->  **CREATE ANOTHER STAGE**
+#### CREATE ANOTHER STAGE
 From the **Databases** tab, click the `<firstname>_<lastname>_CYBERSYN` database and `PUBLIC` schema. Click the **Create** button, then **Stage** > **Snowflake Managed**.
 
 ![stages create](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_8.png?raw=true)
 
-In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_sec_report_data`
+In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_sec_filings`
 
 In the database explorer, click on your new stage (again, you may need to click the ellipses (...) and 'Refresh')
 From the top right corner.
@@ -385,6 +389,8 @@ Verify that each file has a status of `LOADED`:
 Now, let's take a look at the data that was loaded:
 ```SQL
 SELECT * FROM sec_filings_index LIMIT 10;
+```
+```SQL
 SELECT * FROM sec_filings_attributes LIMIT 10;
 ```
 
@@ -398,7 +404,7 @@ To close the display in the panel and display the query details again, click the
 
 Next, let's look at how Snowflake allows us to create a view and also query the JSON data directly using SQL.
 
->  **Views & Materialized Views**
+>  **Views & Materialized Views:**
 A view allows the result of a query to be accessed as if it were a table. Views can help present data to end users in a cleaner manner, limit what end users can view in a source table, and write more modular SQL.
 
 Snowflake also supports materialized views in which the query results are stored as though the results are a table. This allows faster access, but requires storage space. Materialized views can be created and queried if you are using Snowflake Enterprise Edition (or higher).
@@ -490,18 +496,21 @@ That's it! You have now successfully subscribed to the Financial & Economic Esse
 
 ## 4. Querying, the Results Cache, & Cloning
 
-In the previous exercises, we loaded data into two tables using Snowflake's `COPY` bulk loader command and the `SNOWPARK_HOL_VWH` virtual warehouse. Typically, we would now take on a different role for the analytics users at our company who need to query data in those tables using the worksheet and a second warehouse. This allows each group to work independently without "noisy neighbors" hogging their compute power.
+In the previous exercises, we loaded data into two tables using Snowflake's `COPY` bulk loader command and the `TB_DE_WH` virtual warehouse. Typically, we would now take on a different role for the analytics users at our company who need to query data in those tables using the worksheet and a second warehouse. This allows each group to work independently without "noisy neighbors" hogging their compute power.
 
 >  **Real World Roles and Querying**
-Within a real company, analytics users would likely have a different role than `SNOWPARK_HOL_ROLE`. To keep the lab simple, we are going to stay with the `SNOWPARK_HOL_ROLE` role for this section. Additionally, querying would typically be done with a business intelligence product like Tableau, Looker, PowerBI, etc. For more advanced analytics, data science tools like Datarobot, Dataiku, AWS Sagemaker or many others can query Snowflake. Any technology that leverages JDBC/ODBC, Spark, Python, or any of the other supported programmatic interfaces can run analytics on the data in Snowflake. To keep this lab simple, all queries are being executed via the Snowflake worksheet.
+Within a real company, analytics users would likely have a different role than `TB_ADMIN`. To keep the lab simple, we are going to stay with the `TB_ADMIN` role for this section. Additionally, querying would typically be done with a business intelligence product like Tableau, Looker, PowerBI, etc. For more advanced analytics, data science tools like Datarobot, Dataiku, AWS Sagemaker or many others can query Snowflake. Any technology that leverages JDBC/ODBC, Spark, Python, or any of the other supported programmatic interfaces can run analytics on the data in Snowflake. To keep this lab simple, all queries are being executed via the Snowflake worksheet.
 
 ### Execute Some Queries
 
 Go to the **ZERO_TO_SNOWFLAKE_WITH_CYBERSYN** worksheet and be sure to use the HOL warehouse. Your worksheet context should be the following:
 
-**Role:** `SNOWPARK_HOL_ROLE`
-**Warehouse:** `SNOWPARK_HOL_VWH`
+**Role:** `TB_ADMIN`
+
+**Warehouse:** `TB_DE_WH`
+
 **Database:** `CYBERSYN_<firstname_lastname>`
+
 **Schema:** `PUBLIC`
 
 ![sample data query results](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/6Query_1.png?raw=true)
@@ -691,9 +700,9 @@ Let's roll back the `COMPANY_METADATA` table in the `<firstname>_<lastname>_CYBE
 First, run the following SQL statements to switch your worksheet to the proper context:
 
 ```SQL
-USE ROLE SNOWPARK_HOL_ROLE;
+USE ROLE TB_ADMIN;
 
-USE WAREHOUSE SNOWPARK_HOL_VWH;
+USE WAREHOUSE TB_DE_WH;
 
 USE DATABASE <firstname>_<lastname>_CYBERSYN;
 
