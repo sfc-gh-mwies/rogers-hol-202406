@@ -218,7 +218,7 @@ Click `COMPANY_METADATA` and the **Columns** tab to see the table structure you 
 
 ### Load the Table from a File
 
-Download [cybersyn_consumer_company_metadata.csv](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/01%20-%20Snowflake%20Fundamentals/cybersyn_consumer_company_metadata.csv)
+Download [cybersyn_consumer_company_metadata.csv](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/01%20-%20Snowflake%20Fundamentals/cybersyn_consumer_company_metadata.csv) (click the 'Download Raw File' button)
 
 From the **Databases** tab, click the `<firstname>_<lastname>_CYBERSYN` database and `PUBLIC` schema. Click the **Create** button, then **Stage** > **Snowflake Managed**.
 
@@ -226,10 +226,12 @@ From the **Databases** tab, click the `<firstname>_<lastname>_CYBERSYN` database
 
 In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_company_metadata`
 
-![create stage settings](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_9.png?raw=true)
+![create stage settings](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/create_managed_stage.png)
 
 In the database explorer, click on your new schema (you may need to click the ellipses (...) and 'Refresh')
 From the top right corner, click the '+ Files' button and add the cybersyn_consumer_company_metadata.csv 
+
+![Load File to Stage](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/img/upload_to_stage.png)
 
 Now let's take a look at the contents of the `cybersyn_company_metadata` stage. Navigate back to the **Worksheets** tab and open the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet we made.
 

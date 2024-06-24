@@ -931,13 +931,13 @@ ORDER BY oic.menu_item_id, oic.year, oic.month)avg_r_c_wo_item;
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.analytics.demand_forecast_training_base
 COMMENT = 'Training Staging Table for Demo Purposes'
     AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.analytics_v2.demand_forecast_training_base;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.analytics.demand_forecast_training_base;
 
 -- create menu_item_forecast table
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.analytics.menu_item_forecast
 COMMENT = 'Output of Data Science Vignette - Available immediately in Exchange for Demo Purposes'
     AS
-SELECT * FROM frostbyte_tasty_bytes_setup_s.analytics_v2.menu_item_forecast;
+SELECT * FROM frostbyte_tasty_bytes_setup_s.analytics.menu_item_forecast;
 
 -- create menu_item_aggregate_v view
 CREATE OR REPLACE VIEW frostbyte_tasty_bytes_v2.analytics.menu_item_aggregate_v
@@ -949,6 +949,7 @@ SELECT * RENAME sale_price AS price FROM frostbyte_tasty_bytes_v2.harmonized.men
 CALL frostbyte_tasty_bytes_v2.analytics.build_ds_table();
 
 ALTER DYNAMIC TABLE frostbyte_tasty_bytes_v2.harmonized.menu_item_aggregate_dt SET LAG = '1 days';
+-- ALTER DYNAMIC TABLE frostbyte_tasty_bytes_v2.harmonized.menu_item_aggregate_dt SUSPEND;
 
 -- scale warehouse for table creation
 ALTER WAREHOUSE demo_build_wh SET warehouse_size = 'XSmall';
