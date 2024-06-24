@@ -143,10 +143,10 @@ We will start by collecting data from three different sources:
 
 Let's start by preparing to load structured `.csv` data into Snowflake.
 
-We are using company metadata developed from the Securities and Exchange Commission (SEC) that details the consumer packaged goods (CPG) companies we want to evaluate. The data has been exported and pre-staged for you in an Amazon AWS S3 bucket in the US-EAST region. It is in comma-delimited format with a single header line and double quotes enclosing all string values, including the field headings in the header line. This will be important when we configure the Snowflake table to store this data.
+We are using company metadata developed from the Securities and Exchange Commission (SEC) that details the consumer packaged goods (CPG) companies we want to evaluate. The data can be found in this git repo. It is in comma-delimited format with a single header line and double quotes enclosing all string values, including the field headings in the header line. This will be important when we configure the Snowflake table to store this data.
 
 **Getting Data into Snowflake**
-Data can be ingested into Snowflake from many locations by using the `COPY` command, Snowpipe auto-ingestion, external connectors, or third-party ETL/ELT solutions. For more information on getting data into Snowflake, see the [Snowflake documentation](https://docs.snowflake.net/manuals/user-guide-data-load.html). For the purposes of this lab, we use the `COPY` command and AWS S3 storage to load data manually. In a real-world scenario, you would more likely use an ETL solution or grab data directly from the Snowflake Marketplace!
+Data can be ingested into Snowflake from many locations by using the `COPY` command, Snowpipe auto-ingestion, external connectors, or third-party ETL/ELT solutions. For more information on getting data into Snowflake, see the [Snowflake documentation](https://docs.snowflake.net/manuals/user-guide-data-load.html). For the purposes of this lab, we use the Snowfsight UI to load data manually. In a real-world scenario, you would more likely use an ETL solution or grab data directly from the Snowflake Marketplace!
 
 ### Create a Database and Table
 Ensure you are using the `SNOWPARK_HOL_ROLE` role by selecting your name at the top left, **Switch Role** > **SNOWPARK_HOL_ROLE**.
@@ -216,27 +216,20 @@ Click `COMPANY_METADATA` and the **Columns** tab to see the table structure you 
 
 ![TRIPS table structure](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_7.png?raw=true)
 
-### Create an External Stage
+### Load the Table from a File
 
-We are working with structured, comma-delimited data that has already been staged in a public, external S3 bucket. Before we can use this data, we first need to create a _stage_ that specifies the location of our external bucket.
+Download [cybersyn_consumer_company_metadata.csv](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/01%20-%20Snowflake%20Fundamentals/cybersyn_consumer_company_metadata.csv)
 
->  For this lab, we are using an AWS-East bucket. To prevent data egress/transfer costs in the future, you should select a staging location from the same cloud provider and region as your Snowflake account.
-
-From the **Databases** tab, click the `<firstname>_<lastname>_CYBERSYN` database and `PUBLIC` schema. Click the **Create** button, then **Stage** > **Amazon S3**.
+From the **Databases** tab, click the `<firstname>_<lastname>_CYBERSYN` database and `PUBLIC` schema. Click the **Create** button, then **Stage** > **Snowflake Managed**.
 
 ![stages create](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_8.png?raw=true)
 
-In the `Create Securable Object` dialog that opens, replace the following values in the SQL statement:
-
-**Stage Name**: `cybersyn_company_metadata`
-**URL**: `s3://sfquickstarts/zero_to_snowflake/cybersyn_consumer_company_metadata.csv`
-
-**Note:** Make sure to include the final forward slash (`/`) at the end of the URL or you will encounter errors later when loading data from the bucket.
-Also ensure you have removed 'credentials = (...)' statement which is not required. You can also comment it out like the picture below by using '--'. The create stage command should resemble the below picture or not include the 3rd line.
-
->  The S3 bucket for this lab is public so you can leave the credentials options in the statement empty. In a real-world scenario, the bucket used for an external stage would likely require key information.
+In the `Create Stage` dialog that opens, set **Stage Name**: `cybersyn_company_metadata`
 
 ![create stage settings](https://github.com/Snowflake-Labs/sfquickstarts/blob/master/site/sfguides/src/getting_started_with_snowflake/assets/4PreLoad_9.png?raw=true)
+
+In the database explorer, click on your new schema (you may need to click the ellipses (...) and 'Refresh')
+From the top right corner, click the '+ Files' button and add the cybersyn_consumer_company_metadata.csv 
 
 Now let's take a look at the contents of the `cybersyn_company_metadata` stage. Navigate back to the **Worksheets** tab and open the `ZERO_TO_SNOWFLAKE_WITH_CYBERSYN` worksheet we made.
 
