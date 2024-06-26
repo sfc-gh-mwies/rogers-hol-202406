@@ -14,8 +14,3 @@ Please note that this GitHub repository is no longer maintained or supported. Th
 
 ## End to End Demo Scripts
    - Please refer to the **README.md** files within each vignette folder which include a walkthrough of what is required to Setup, Run, Reset and Purge the demo.
-
-## Graphics
-   - [**Logos**](https://github.com/snowflakecorp/frostbytes/tree/main/Tasty%20Bytes/70%20-%20graphics/Logos)
-   - [**Trucks**](https://github.com/snowflakecorp/frostbytes/tree/main/Tasty%20Bytes/70%20-%20graphics/Trucks)
-   - [**Zoom Backgrounds**](https://github.com/snowflakecorp/frostbytes/tree/main/Tasty%20Bytes/70%20-%20graphics/Zoom%20Backgrounds)
