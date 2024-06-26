@@ -25,18 +25,13 @@ USE ROLE sysadmin;
  • database, schema and warehouse creation
 --*/
 
--- create a database named "tb_101_share" from the share titled "tb_101";
+-- CREATE A DATABASE NAMED "tb_101_share" FROM THE SHARE TITLED "tb_101";
 
--- create raw_pos schema
+-- build out the tb_101 database and schemas
+CREATE OR REPLACE DATABASE TB_101;
 CREATE OR REPLACE SCHEMA tb_101.raw_pos;
-
--- create raw_customer schema
 CREATE OR REPLACE SCHEMA tb_101.raw_customer;
-
--- create harmonized schema
 CREATE OR REPLACE SCHEMA tb_101.harmonized;
-
--- create analytics schema
 CREATE OR REPLACE SCHEMA tb_101.analytics;
 
 -- create warehouses
