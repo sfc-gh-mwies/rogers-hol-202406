@@ -43,3 +43,7 @@
 * Collecting Coordinates, Creating a Bounding Polygon & Finding its Center Point
 * Finding Locations Furthest Away from our Top Selling Hub
 * Geospatial Analysis with H3 (Hexagonal Hierarchical Geospatial Indexing System)
+
+### (Optional) Snowsight Dashboard
+- [**snowsight_dashboard_org_city_metrics_build_walkthrough_tb.md**](https://github.com/snowflakecorp/frostbytes/blob/main/Tasty%20Bytes/40%20-%20analytics/Snowsight%20-%20Organization%20and%20City%20Metrics%20Dashboard/snowsight_dashboard_org_city_metrics_build_walkthrough_tb.md)
+  - This dashboard covers Organization and City (using a custom filter) metrics related to Tasty Bytes. Tiles within include details on total sales, total orders, hourly sales, top-selling locations and most loyal customers.
