@@ -44,7 +44,7 @@ USE WAREHOUSE tasty_de_wh;
 
 /* CRITICAL STEP: DO NOT SKIP */
 -- FIND AND REPLACE THE STRING "<firstname>_<lastname>" WITH YOUR NAME EX. "SRIDHAR_RAMASWAMY"
-CREATE DATABASE IF NOT EXISTS frostbyte_tasty_bytes_<firstname>_<lastname> CLONE frostbyte_tasty_bytes;
+CREATE DATABASE IF NOT EXISTS frostbyte_tasty_bytes_v2_<firstname>_<lastname> CLONE frostbyte_tasty_bytes_v2;
 /* ========================== */
 
 
@@ -53,7 +53,7 @@ SELECT TOP 10
     o.location_id,
     o.location_name,
     SUM(o.price) AS total_sales_usd
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.orders_v o
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.orders_v o
 WHERE 1=1
     AND o.primary_city = 'Paris'
     AND YEAR(o.date) = 2022
@@ -71,7 +71,7 @@ SELECT TOP 10
     o.location_id,
     ST_MAKEPOINT(o.longitude, o.latitude) AS geo_point,
     SUM(o.price) AS total_sales_usd
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.orders_v o
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.orders_v o
 WHERE 1=1
     AND o.primary_city = 'Paris'
     AND YEAR(o.date) = 2022
@@ -99,7 +99,7 @@ WITH _top_10_locations AS
         o.location_id,
         ST_MAKEPOINT(o.longitude, o.latitude) AS geo_point,
         SUM(o.price) AS total_sales_usd
-    FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.orders_v o
+    FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.orders_v o
     WHERE 1=1
         AND o.primary_city = 'Paris'
         AND YEAR(o.date) = 2022
@@ -141,7 +141,7 @@ WITH _top_10_locations AS
         o.location_id,
         ST_MAKEPOINT(o.longitude, o.latitude) AS geo_point,
         SUM(o.price) AS total_sales_usd
-    FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.orders_v o
+    FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.orders_v o
     WHERE 1=1
         AND o.primary_city = 'Paris'
         AND YEAR(o.date) = 2022
@@ -168,7 +168,7 @@ WITH _top_10_locations AS
         o.location_id,
         ST_MAKEPOINT(o.longitude, o.latitude) AS geo_point,
         SUM(o.price) AS total_sales_usd
-    FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.orders_v o
+    FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.orders_v o
     WHERE 1=1
         AND o.primary_city = 'Paris'
         AND YEAR(o.date) = 2022
@@ -199,7 +199,7 @@ WITH _2022_paris_locations AS
         o.location_id,
         o.location_name,
         ST_MAKEPOINT(o.longitude, o.latitude) AS geo_point
-    FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.orders_v o
+    FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.orders_v o
     WHERE 1=1
         AND o.primary_city = 'Paris'
         AND YEAR(o.date) = 2022

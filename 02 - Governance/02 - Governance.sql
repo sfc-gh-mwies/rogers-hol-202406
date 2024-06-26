@@ -217,7 +217,7 @@ FROM TABLE(<firstname>_<lastname>.information_schema.tag_references_all_columns
 CREATE OR REPLACE MASKING POLICY <firstname>_<lastname>.governance.tasty_pii_string_mask AS (val STRING) RETURNS STRING ->
     CASE
         -- these active roles have access to values 
-        WHEN CURRENT_ROLE() IN ('SYSADMIN', 'ACCOUNTADMIN','tastybytes_admin')
+        WHEN CURRENT_ROLE() IN ('SYSADMIN', 'ACCOUNTADMIN','TASTYBYTES_ADMIN')
             THEN val 
         -- if a column is tagged with TASTY_PHI : PHONE_NUMBER    
         WHEN SYSTEM$GET_TAG_ON_CURRENT_COLUMN('TAGS.TASTY_PII') = 'PHONE_NUMBER'
@@ -235,7 +235,7 @@ END;
   --> if a DATE column is not tagged with BIRTHDAY, return null.
 CREATE OR REPLACE MASKING POLICY <firstname>_<lastname>.governance.tasty_pii_date_mask AS (val DATE) RETURNS DATE ->
     CASE
-        WHEN CURRENT_ROLE() IN ('SYSADMIN', 'ACCOUNTADMIN') 
+        WHEN CURRENT_ROLE() IN ('SYSADMIN', 'ACCOUNTADMIN','TASTYBYTES_ADMIN') 
             THEN val
         WHEN SYSTEM$GET_TAG_ON_CURRENT_COLUMN('TAGS.TASTY_PII') = 'BIRTHDAY'
             THEN DATE_FROM_PARTS(YEAR(val) - (YEAR(val) % 5),1,1)
@@ -366,7 +366,7 @@ CREATE OR REPLACE ROW ACCESS POLICY <firstname>_<lastname>.governance.customer_c
     AS (city STRING) RETURNS BOOLEAN ->
        CURRENT_ROLE() IN -- list of roles that will not be subject to the policy
            (
-            'ACCOUNTADMIN','SYSADMIN'
+            'ACCOUNTADMIN','SYSADMIN','TASTYBYTES_ADMIN'
            )
         OR EXISTS -- this clause references our mapping table from above to handle the row level filtering
             (
@@ -398,7 +398,7 @@ GROUP BY cl.customer_id, cl.first_name, cl.last_name, cl.city, cl.marital_status
 -- wow! we were able to see both Row and Column level security in that result set.
 -- let's now check that a privileged user is not impacted
 
-USE ROLE sysadmin;
+USE ROLE TASTYBYTES_ADMIN;
 
 SELECT
     cl.customer_id,
@@ -416,7 +416,7 @@ USE ROLE tasty_test_role;
 SELECT
     clm.city,
     SUM(clm.total_sales) AS total_sales_usd
-FROM FROSTBYTE_TASTY_BYTES.HARMONIZED.CUSTOMER_LOYALTY_METRICS_V_<firstname>_<lastname> clm
+FROM <firstname>_<lastname>.public.CUSTOMER_LOYALTY_METRICS_V clm
 GROUP BY clm.city;
 
 /*----------------------------------------------------------------------------------
@@ -433,17 +433,23 @@ Step 5 - (Optional) Automatic Data Classification - *Enterprise Edition+ require
   Let's see it in action!
 ----------------------------------------------------------------------------------*/
 
-USE ROLE SYSADMIN;
+USE ROLE tasty_test_role;
+
+-- THIS QUERY ALLOWS YOU TO PREVIEW AUTOMATIC CLASSIFICAITON
+SELECT EXTRACT_SEMANTIC_CATEGORIES('<firstname>_<lastname>.public.customer_loyalty');
+
+-- IF AUTO-CLASSIFICATION LOOKS GOOD, YOU CAN APPLY IT DIRECTLY
+-- -- Alternatively, you could modify the output and apply the modified version
 CALL ASSOCIATE_SEMANTIC_CATEGORY_TAGS(
-   'tb_101.raw_customer.customer_loyalty',
-    EXTRACT_SEMANTIC_CATEGORIES('tb_101.raw_customer.customer_loyalty')
+   '<firstname>_<lastname>.public.customer_loyalty',
+    EXTRACT_SEMANTIC_CATEGORIES('<firstname>_<lastname>.public.customer_loyalty')
 );
 
 -- let's view the new tags Snowflake applied automatically via Data Classification
 SELECT *
 FROM TABLE(
-  frostbyte_tasty_bytes.information_schema.TAG_REFERENCES_ALL_COLUMNS(
-    'tb_101.raw_customer.CUSTOMER_LOYALTY',
+  <firstname>_<lastname>.information_schema.TAG_REFERENCES_ALL_COLUMNS(
+    '<firstname>_<lastname>.public.customer_loyalty',
     'table'
   )
 );
@@ -455,7 +461,7 @@ Bonus!
     The governance updates we have made are now visible in the Snowsight UI.
     To view them: 
         1) Search for "CUSTOMER_LOYALTY" in the object tree to the left
-        2) Under FROSTBYTES_TASTY_BYTES > RAW_CUSTOMER, hover over the 
+        2) Under <firstname>_<lastname> > PUBLIC, hover over the 
            CUSTOMER_LOAYALTY table and click the icon in the upper right.
         3) A new tab will open displaying the table. 
             * You will see the Row Access Policy on the "Table Details" tab
@@ -483,7 +489,7 @@ ALTER TAG <firstname>_<lastname>.tags.tasty_pii UNSET
     MASKING POLICY <firstname>_<lastname>.governance.tasty_pii_date_mask;
 
 -- with the masking objects clear, we will now DROP our Row Access Policy from our Table
-ALTER TABLE tb_101.raw_customer.customer_loyalty
+ALTER TABLE <firstname>_<lastname>.public.customer_loyalty
 DROP ROW ACCESS POLICY <firstname>_<lastname>.governance.customer_city_row_policy;
 
 -- Unset the system tags that may have been set by Data Classification
@@ -498,7 +504,3 @@ ALTER TABLE <firstname>_<lastname>.public.customer_loyalty MODIFY
     COLUMN birthday_date UNSET TAG snowflake.core.privacy_category, snowflake.core.semantic_category,
     COLUMN phone_number UNSET TAG snowflake.core.privacy_category, snowflake.core.semantic_category,
     COLUMN postal_code UNSET TAG snowflake.core.privacy_category, snowflake.core.semantic_category;
-
--- next we will DROP our TAGS and GOVERNANCE schemas (and thus everything within)
-DROP SCHEMA <firstname>_<lastname>.tags;
-DROP SCHEMA <firstname>_<lastname>.governance;

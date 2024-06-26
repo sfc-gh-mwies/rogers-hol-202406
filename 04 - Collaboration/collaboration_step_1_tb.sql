@@ -49,14 +49,14 @@ USE WAREHOUSE tasty_de_wh;
 
 /* CRITICAL STEP: DO NOT SKIP */
 -- FIND AND REPLACE THE STRING "<firstname>_<lastname>" WITH YOUR NAME EX. "SRIDHAR_RAMASWAMY"
-CREATE DATABASE IF NOT EXISTS frostbyte_tasty_bytes_<firstname>_<lastname> CLONE frostbyte_tasty_bytes;
+CREATE DATABASE IF NOT EXISTS frostbyte_tasty_bytes_v2_<firstname>_<lastname> CLONE frostbyte_tasty_bytes_v2;
 /* ========================== */
 
 -- now to begin let's see if we can confirm our analysts findings using our Point of Systems Order data.
 SELECT 
     o.date,
     SUM(o.price) AS daily_sales
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.orders_v o
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.orders_v o
 WHERE 1=1
     AND o.country = 'Germany'
     AND o.primary_city = 'Hamburg'
@@ -94,7 +94,7 @@ ORDER BY o.date ASC;
     
 -- with the shared FROSTBYTE_WEATHERSOURCE database in place, let's create a Harmonized layer view joining
 -- Weather Source Daily History to our Country dimension table to filter to the Countries and Cities we serve
-CREATE OR REPLACE VIEW frostbyte_tasty_bytes_<firstname>_<lastname>.harmonized.daily_weather_v
+CREATE OR REPLACE VIEW frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.daily_weather_v
     AS
 SELECT 
     hd.*,
@@ -105,7 +105,7 @@ FROM frostbyte_weathersource.onpoint_id.history_day hd
 JOIN frostbyte_weathersource.onpoint_id.postal_codes pc
     ON pc.postal_code = hd.postal_code
     AND pc.country = hd.country
-JOIN frostbyte_tasty_bytes_<firstname>_<lastname>.raw_pos.country c
+JOIN frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.country c
     ON c.iso_country = hd.country
     AND c.city = hd.city_name;
 
@@ -118,7 +118,7 @@ SELECT
     dw.city_name,
     dw.date_valid_std,
     AVG(dw.avg_temperature_air_2m_f) AS avg_temperature_air_2m_f
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.harmonized.daily_weather_v dw
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.daily_weather_v dw
 WHERE 1=1
     AND dw.country_desc = 'Germany'
     AND dw.city_name = 'Hamburg'
@@ -138,7 +138,7 @@ SELECT
     dw.date_valid_std,
     MAX(dw.max_wind_speed_100m_mph) AS max_wind_speed_100m_mph,
     AVG(dw.tot_precipitation_in) AS tot_precipitation_in
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.harmonized.daily_weather_v dw
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.daily_weather_v dw
 WHERE 1=1
     AND dw.country_desc IN ('Germany')
     AND dw.city_name = 'Hamburg'
@@ -160,7 +160,7 @@ ORDER BY dw.date_valid_std DESC;
 
 -- as we are a global company, let's first create two SQL functions to convert Fahrenheit to Celsius and Inches to Millimeters
     --> create the SQL function that translates Fahrenheit to Celsius
-CREATE OR REPLACE FUNCTION frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.fahrenheit_to_celsius(temp_f NUMBER(35,4))
+CREATE OR REPLACE FUNCTION frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.fahrenheit_to_celsius(temp_f NUMBER(35,4))
 RETURNS NUMBER(35,4)
 AS
 $$
@@ -168,7 +168,7 @@ $$
 $$;
 
     --> create the SQL function that translates Inches to Millimeter
-CREATE OR REPLACE FUNCTION frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.inch_to_millimeter(inch NUMBER(35,4))
+CREATE OR REPLACE FUNCTION frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.inch_to_millimeter(inch NUMBER(35,4))
 RETURNS NUMBER(35,4)
     AS
 $$
@@ -183,12 +183,12 @@ SELECT
     fd.country_desc,
     ZEROIFNULL(SUM(odv.price)) AS daily_sales,
     ROUND(AVG(fd.avg_temperature_air_2m_f),2) AS avg_temperature_fahrenheit,
-    ROUND(AVG(frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.fahrenheit_to_celsius(fd.avg_temperature_air_2m_f)),2) AS avg_temperature_celsius,
+    ROUND(AVG(frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.fahrenheit_to_celsius(fd.avg_temperature_air_2m_f)),2) AS avg_temperature_celsius,
     ROUND(AVG(fd.tot_precipitation_in),2) AS avg_precipitation_inches,
-    ROUND(AVG(frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.inch_to_millimeter(fd.tot_precipitation_in)),2) AS avg_precipitation_millimeters,
+    ROUND(AVG(frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.inch_to_millimeter(fd.tot_precipitation_in)),2) AS avg_precipitation_millimeters,
     MAX(fd.max_wind_speed_100m_mph) AS max_wind_speed_100m_mph
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.harmonized.daily_weather_v fd
-LEFT JOIN frostbyte_tasty_bytes_<firstname>_<lastname>.harmonized.orders_v odv
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.daily_weather_v fd
+LEFT JOIN frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.orders_v odv
     ON fd.date_valid_std = DATE(odv.order_ts)
     AND fd.city_name = odv.primary_city
     AND fd.country_desc = odv.country
@@ -202,7 +202,7 @@ ORDER BY fd.date_valid_std ASC;
 
 -- in the query above we are now able to see sales and weather for each day
 -- let's remove our filters and promote this to an Analytics view
-CREATE OR REPLACE VIEW frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.daily_city_metrics_v
+CREATE OR REPLACE VIEW frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.daily_city_metrics_v
 COMMENT = 'Daily Weather Source Metrics and Orders Data for our Cities'
     AS
 SELECT 
@@ -211,12 +211,12 @@ SELECT
     fd.country_desc,
     ZEROIFNULL(SUM(odv.price)) AS daily_sales,
     ROUND(AVG(fd.avg_temperature_air_2m_f),2) AS avg_temperature_fahrenheit,
-    ROUND(AVG(frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.fahrenheit_to_celsius(fd.avg_temperature_air_2m_f)),2) AS avg_temperature_celsius,
+    ROUND(AVG(frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.fahrenheit_to_celsius(fd.avg_temperature_air_2m_f)),2) AS avg_temperature_celsius,
     ROUND(AVG(fd.tot_precipitation_in),2) AS avg_precipitation_inches,
-    ROUND(AVG(frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.inch_to_millimeter(fd.tot_precipitation_in)),2) AS avg_precipitation_millimeters,
+    ROUND(AVG(frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.inch_to_millimeter(fd.tot_precipitation_in)),2) AS avg_precipitation_millimeters,
     MAX(fd.max_wind_speed_100m_mph) AS max_wind_speed_100m_mph
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.harmonized.daily_weather_v fd
-LEFT JOIN frostbyte_tasty_bytes_<firstname>_<lastname>.harmonized.orders_v odv
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.daily_weather_v fd
+LEFT JOIN frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.orders_v odv
     ON fd.date_valid_std = DATE(odv.order_ts)
     AND fd.city_name = odv.primary_city
     AND fd.country_desc = odv.country
@@ -236,7 +236,7 @@ SELECT
     dcm.avg_precipitation_inches,
     dcm.avg_precipitation_millimeters,
     dcm.max_wind_speed_100m_mph
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.analytics.daily_city_metrics_v dcm
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.daily_city_metrics_v dcm
 WHERE 1=1
     AND dcm.country_desc = 'Germany'
     AND dcm.city_name = 'Hamburg'
@@ -280,7 +280,7 @@ SELECT
     cpg.city,
     cpg.country,
     cpg.polygon_wkt
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.raw_safegraph.core_poi_geometry cpg
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_safegraph.core_poi_geometry cpg
 WHERE 1=1
     AND cpg.top_category = 'Museums, Historical Sites, and Similar Institutions'
     AND cpg.sub_category = 'Museums'
@@ -300,7 +300,7 @@ WHERE 1=1
 SELECT TOP 50
     oh.location_id,
     SUM(oh.order_total) AS total_sales
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.raw_pos.order_header oh
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_header oh
 GROUP BY oh.location_id
 ORDER BY total_sales DESC;
 
@@ -312,7 +312,7 @@ WITH _top_50_location_id AS
     SELECT TOP 50
         oh.location_id,
         SUM(oh.order_total) AS total_sales
-    FROM frostbyte_tasty_bytes_<firstname>_<lastname>.raw_pos.order_header oh
+    FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_header oh
     GROUP BY oh.location_id
     ORDER BY total_sales DESC
 )
@@ -320,8 +320,8 @@ SELECT
     TOP 10 
     cpg.top_category,
     COUNT(DISTINCT t50.location_id) AS count_top_50_location
-FROM frostbyte_tasty_bytes_<firstname>_<lastname>.raw_safegraph.core_poi_geometry cpg
-JOIN frostbyte_tasty_bytes_<firstname>_<lastname>.raw_pos.location l 
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_safegraph.core_poi_geometry cpg
+JOIN frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.location l 
     ON cpg.placekey = l.placekey
 JOIN _top_50_location_id t50
     ON l.location_id = t50.location_id
@@ -341,7 +341,7 @@ ORDER BY count_top_50_location DESC;
 /*------               Vignette Reset Scripts                   ------*/
 /**********************************************************************/
 
-DROP VIEW IF EXISTS frostbyte_tasty_bytes_mike_wies.harmonized.daily_weather_v;
-DROP VIEW IF EXISTS frostbyte_tasty_bytes_mike_wies.analytics.daily_city_metrics_v;
-DROP FUNCTION IF EXISTS frostbyte_tasty_bytes_mike_wies.analytics.fahrenheit_to_celsius(NUMBER(35,4));
-DROP FUNCTION IF EXISTS frostbyte_tasty_bytes_mike_wies.analytics.inch_to_millimeter(NUMBER(35,4));
+DROP VIEW IF EXISTS frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.daily_weather_v;
+DROP VIEW IF EXISTS frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.daily_city_metrics_v;
+DROP FUNCTION IF EXISTS frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.fahrenheit_to_celsius(NUMBER(35,4));
+DROP FUNCTION IF EXISTS frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.inch_to_millimeter(NUMBER(35,4));

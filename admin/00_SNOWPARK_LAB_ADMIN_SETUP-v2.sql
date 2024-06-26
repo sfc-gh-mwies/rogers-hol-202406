@@ -24,9 +24,6 @@ Date(yyyy-mm-dd)    Author              Comments
 2023-10-18        Jacob Kranzler      Added GRANT on PUBLIC to Sysadmin
 2023-06-02        Jacob Kranzler      Initial Release
 ***************************************************************************************************/
- 
-
-USE ROLE accountadmin;
 
 USE ROLE sysadmin; 
 
@@ -35,26 +32,12 @@ SELECT CURRENT_ROLE();
 
 -- create frostbyte_tasty_bytes_v2 database
 CREATE OR REPLACE DATABASE frostbyte_tasty_bytes_v2;
-
--- create raw_pos schema
 CREATE OR REPLACE SCHEMA frostbyte_tasty_bytes_v2.raw_pos;
-
--- create raw_ schema
 CREATE OR REPLACE SCHEMA frostbyte_tasty_bytes_v2.raw_customer;
-
--- create raw_customer schema
 CREATE OR REPLACE SCHEMA frostbyte_tasty_bytes_v2.raw_supply_chain;
-
--- create raw_customer schema
 CREATE OR REPLACE SCHEMA frostbyte_tasty_bytes_v2.raw_truck;
-
--- create raw_safegraph schema
 CREATE OR REPLACE SCHEMA frostbyte_tasty_bytes_v2.raw_safegraph;
-
--- create harmonized schema
 CREATE OR REPLACE SCHEMA frostbyte_tasty_bytes_v2.harmonized;
-
--- create analytics schema
 CREATE OR REPLACE SCHEMA frostbyte_tasty_bytes_v2.analytics;
 
 -- create warehouses
@@ -64,22 +47,25 @@ CREATE WAREHOUSE IF NOT EXISTS demo_build_wh
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
+    MAX_CLUSTER_COUNT = 5
 COMMENT = 'demo build warehouse for frostbyte assets';
     
 CREATE WAREHOUSE IF NOT EXISTS tasty_de_wh
-    WAREHOUSE_SIZE = 'xsmall'
+    WAREHOUSE_SIZE = 'medium'
     WAREHOUSE_TYPE = 'standard'
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
+    MAX_CLUSTER_COUNT = 5
 COMMENT = 'data engineering warehouse for tasty bytes';
 
 CREATE WAREHOUSE IF NOT EXISTS tasty_ds_wh
-    WAREHOUSE_SIZE = 'xsmall'
+    WAREHOUSE_SIZE = 'medium'
     WAREHOUSE_TYPE = 'standard'
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
+    MAX_CLUSTER_COUNT = 5
 COMMENT = 'data science warehouse for tasty bytes';
 
 CREATE WAREHOUSE IF NOT EXISTS tasty_bi_wh
@@ -88,6 +74,7 @@ CREATE WAREHOUSE IF NOT EXISTS tasty_bi_wh
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
+    MAX_CLUSTER_COUNT = 5
 COMMENT = 'business intelligence warehouse for tasty bytes';
 
 CREATE OR REPLACE WAREHOUSE tasty_dev_wh
@@ -96,6 +83,7 @@ CREATE OR REPLACE WAREHOUSE tasty_dev_wh
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
+    MAX_CLUSTER_COUNT = 5
 COMMENT = 'developer warehouse for tasty bytes';
 
 CREATE WAREHOUSE IF NOT EXISTS tasty_data_app_wh
@@ -104,6 +92,7 @@ CREATE WAREHOUSE IF NOT EXISTS tasty_data_app_wh
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE
+    MAX_CLUSTER_COUNT = 5
 COMMENT = 'data app warehouse for tasty bytes';
 
 CREATE OR REPLACE WAREHOUSE tasty_snowpark_wh
@@ -112,6 +101,7 @@ CREATE OR REPLACE WAREHOUSE tasty_snowpark_wh
     AUTO_RESUME = TRUE
     AUTO_SUSPEND = 60
     INITIALLY_SUSPENDED = TRUE
+    MAX_CLUSTER_COUNT = 5
 COMMENT = 'snowpark optimized warehouse for tasty bytes dsci';
 
 
@@ -374,10 +364,12 @@ SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.truck;
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.order_header
   AS
 SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.order_header;
+ALTER TABLE frostbyte_tasty_bytes_v2.raw_pos.order_header SET CHANGE_TRACKING = TRUE;
 
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_pos.order_detail
   AS
 SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_pos.order_detail;
+ALTER TABLE frostbyte_tasty_bytes_v2.raw_pos.order_detail SET CHANGE_TRACKING = TRUE;
 
 -- raw_customer table build
 CREATE OR REPLACE TABLE frostbyte_tasty_bytes_v2.raw_customer.customer_loyalty
@@ -469,7 +461,7 @@ SELECT * FROM frostbyte_tasty_bytes_setup_s.raw_truck.inventory_queue;
 
 CREATE OR REPLACE DYNAMIC TABLE frostbyte_tasty_bytes_v2.harmonized.menu_item_aggregate_dt
 LAG = '1 minute'
-WAREHOUSE = 'TASTY_DE_WH'
+WAREHOUSE = 'DEMO_BUILD_WH'
     AS
 WITH _point_in_time_cogs AS
 (
@@ -948,8 +940,8 @@ SELECT * RENAME sale_price AS price FROM frostbyte_tasty_bytes_v2.harmonized.men
 -- call snowpark stored procedure to generate shift_sales table
 CALL frostbyte_tasty_bytes_v2.analytics.build_ds_table();
 
-ALTER DYNAMIC TABLE frostbyte_tasty_bytes_v2.harmonized.menu_item_aggregate_dt SET LAG = '1 days';
--- ALTER DYNAMIC TABLE frostbyte_tasty_bytes_v2.harmonized.menu_item_aggregate_dt SUSPEND;
+ALTER DYNAMIC TABLE frostbyte_tasty_bytes_v2.harmonized.menu_item_aggregate_dt SET LAG = '10 days';
+ALTER DYNAMIC TABLE frostbyte_tasty_bytes_v2.harmonized.menu_item_aggregate_dt SUSPEND;
 
 -- scale warehouse for table creation
 ALTER WAREHOUSE demo_build_wh SET warehouse_size = 'XSmall';

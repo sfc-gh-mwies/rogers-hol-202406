@@ -19,7 +19,7 @@ USE WAREHOUSE TASTY_DE_WH;
 
 /* CRITICAL STEP: DO NOT SKIP */
 -- FIND AND REPLACE THE STRING "<firstname>_<lastname>" WITH YOUR NAME EX. "SRIDHAR_RAMASWAMY"
-CREATE DATABASE frostbyte_tasty_bytes_v2_<firstname>_<lastname> CLONE frostbyte_tasty_bytes_v2;
+CREATE OR REPLACE DATABASE frostbyte_tasty_bytes_v2_<firstname>_<lastname> CLONE frostbyte_tasty_bytes_v2;
 /* ========================== */
 
 -- so that we can track new inserts to these order tables, let's leverage Snowflake Streams
@@ -53,16 +53,16 @@ VALUES
 -- for the new order_id's, let's now insert 10 test order_detail line item records including price
 INSERT INTO frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_detail (order_detail_id, order_id, line_number, price)
 VALUES
-(9999999950, 999999995, 0, 10),
-(9999999951, 999999995, 1, 20),
-(9999999952, 999999995, 2, 40),
-(9999999960, 999999996, 0, 5),
-(9999999970, 999999997, 0, 100),
-(9999999980, 999999998, 0, 25),
-(9999999981, 999999998, 1, 50),
-(9999999990, 999999999, 0, 5),
-(9999999991, 999999999, 1, 20),
-(9999999992, 999999999, 2, 25);
+(999999950, 999999995, 0, 10),
+(999999951, 999999995, 1, 20),
+(999999952, 999999995, 2, 40),
+(999999960, 999999996, 0, 5),
+(999999970, 999999997, 0, 100),
+(999999980, 999999998, 0, 25),
+(999999981, 999999998, 1, 50),
+(999999990, 999999999, 0, 5),
+(999999991, 999999999, 1, 20),
+(999999992, 999999999, 2, 25);
 
 
 -- with test data inserted, let's query these streams to produce a new daily aggregate sales and order count row
@@ -75,6 +75,18 @@ JOIN frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_detail_stream
     ON ohs.order_id = ods.order_id
 GROUP BY date
 ORDER BY date DESC;
+
+-- Let's use that query to build a harmonized table directly
+CREATE TABLE FROSTBYTE_TASTY_BYTES_V2_<firstname>_<lastname>.HARMONIZED.AGGREGATE_SALES_DAILY AS 
+    SELECT 
+        TO_DATE(ohs.order_ts) AS date,
+        COUNT(DISTINCT ohs.order_id) AS daily_orders,
+        SUM(ods.price) AS daily_sales
+    FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_header_stream ohs
+    JOIN frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_detail_stream ods
+        ON ohs.order_id = ods.order_id
+    GROUP BY date
+    ORDER BY date DESC;
 
 
 /*---------------------------------------------------------------------------------
@@ -123,33 +135,15 @@ CREATE OR REPLACE DATABASE frostbyte_tasty_bytes_v2_<firstname>_<lastname>_dev C
 CREATE OR REPLACE TASK frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.order_header_load_task
 AFTER frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.tb_dev_clone_task -- kick off after our Development Clone is complete
     AS
-    COPY INTO frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_header
-    FROM @frostbyte_tasty_bytes_v2_<firstname>_<lastname>.public.order_stage/csv/order_header/
-    FILE_FORMAT = 
-        (
-            FORMAT_NAME = 'frostbyte_tasty_bytes_v2_<firstname>_<lastname>.public.csv_ff'
-        );
+    INSERT INTO frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_header
+    SELECT * FROM frostbyte_tasty_bytes_v2.raw_pos.order_header where order_amount < 20;
 
 -- create our order_detail task to also run AFTER our root task
 CREATE OR REPLACE TASK frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.order_detail_load_task
 AFTER frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.tb_dev_clone_task -- kick off after our Development Clone is complete
     AS
-    COPY INTO frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_detail
-    FROM 
-        (
-        SELECT 
-            $1:"ORDER_DETAIL_ID"::NUMBER(38,0) AS order_detail_id,
-            $1:"ORDER_ID"::NUMBER(38,0) AS order_id,
-            $1:"MENU_ITEM_ID"::NUMBER(38,0) AS menu_item_id,
-            $1:"DISCOUNT_ID"::NUMBER(38,0) AS discount_id,
-            $1:"LINE_NUMBER"::NUMBER(5,0) AS line_number,
-            $1:"QUANTITY"::NUMBER(5,0) AS quantity,
-            $1:"PRICE"::NUMBER(38,6) AS price,
-            $1:"UNIT_PRICE"::NUMBER(38,6) AS unit_price,
-            $1:"ORDER_ITEM_DISCOUNT_AMOUNT"::NUMBER(34,4) AS order_item_discount_amount
-        FROM @frostbyte_tasty_bytes_v2_<firstname>_<lastname>.public.order_stage/json/order_detail/
-            (FILE_FORMAT => frostbyte_tasty_bytes_v2_<firstname>_<lastname>.public.json_ff) --reference our file format we created earlier
-        );
+    INSERT INTO frostbyte_tasty_bytes_v2_<firstname>_<lastname>.raw_pos.order_detail
+    SELECT * FROM frostbyte_tasty_bytes_v2.raw_pos.order_detail where unit_price < 5;
 
 
 -- before we can insert the new daily aggregate record we need to make sure both loads are complete
@@ -229,10 +223,9 @@ WHERE 1=1
     AND TIMEDIFF(MINUTE,CURRENT_TIMESTAMP,QUERY_START_TIME) > -5
 ORDER BY query_start_time;
 
-
 -- great everything is running as expected, let's now check to confirm the final task finished
 SELECT * 
-FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.analytics.aggregate_sales_daily_v
+FROM frostbyte_tasty_bytes_v2_<firstname>_<lastname>.harmonized.aggregate_sales_daily
 ORDER BY DATE DESC;
 
 

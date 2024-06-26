@@ -45,7 +45,7 @@ CREATE OR REPLACE WAREHOUSE tb_de_wh
 COMMENT = 'data engineering warehouse for tasty bytes';
 
 CREATE OR REPLACE WAREHOUSE tb_dev_wh
-    WAREHOUSE_SIZE = 'xsmall'
+    WAREHOUSE_SIZE = 'medium'
     WAREHOUSE_TYPE = 'standard'
     AUTO_SUSPEND = 60
     MAX_CLUSTER_COUNT = 5
@@ -289,6 +289,7 @@ GRANT ALL ON WAREHOUSE tasty_dev_wh TO ROLE tastybytes_admin;
 -- Users will need to create their own DB
 GRANT CREATE DATABASE ON ACCOUNT TO ROLE tastybytes_admin;
 GRANT CREATE DATABASE ON ACCOUNT TO ROLE tasty_test_role;
+GRANT CREATE DATABASE ON ACCOUNT TO ROLE tasty_data_engineer;
 
 
 -- now we will grant USAGE on our tb_101 database and ALL schemas within it.
