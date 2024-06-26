@@ -6,11 +6,14 @@ Please note that this GitHub repository is no longer maintained or supported. Th
 
 <img width="1093" alt="image" src="https://user-images.githubusercontent.com/69591821/215190515-fb6b2c47-4916-4817-a8ba-af1067235762.png">
 
-## What does Tasty Bytes Aim to Solve?
-- Tasty Bytes is a Snowflake foundational Feature/Function demo with assets focused on Zero to Snowflake, Workload Deep Dives and Tech Partners.
+# Data Model
+  - [**Tasty Bytes - Lucid Data Model**](https://lucid.app/lucidchart/29364d24-48eb-465b-8e95-bc98c6c60a44/edit?view_items=tfy6w2NlQmyl&invitationId=inv_33fb2bc3-81c2-4d55-af2d-e53cc1297ea9)
+    - Path to the *Z2S Data Model* tab to see a Lucid diagram showcasing the tables and views deployed across the Raw, Harmonized and Analytics zones for the Tasty Bytes Zero to Snowflake Demo.
+    ![Screenshot 2023-01-30 at 3 42 02 PM](https://user-images.githubusercontent.com/68337675/215612819-a56a7027-0491-4670-84ee-84bfb5066912.png)
 
-## Setup
-- Please visit [Setup for Tasty Bytes](https://github.com/snowflakecorp/frostbytes/tree/main/Tasty%20Bytes/20%20-%20setup) for instructions on how to setup the Tasty Bytes vignettes you are looking to run.
 
-## End to End Demo Scripts
-   - Please refer to the **README.md** files within each vignette folder which include a walkthrough of what is required to Setup, Run, Reset and Purge the demo.
+# End to End [Flow](https://lucid.app/lucidchart/29364d24-48eb-465b-8e95-bc98c6c60a44/edit?viewport_loc=-1832%2C-336%2C4416%2C3008%2C0_0&invitationId=inv_33fb2bc3-81c2-4d55-af2d-e53cc1297ea9)
+![Screenshot 2023-01-30 at 3 20 27 PM](https://user-images.githubusercontent.com/68337675/215608850-265fd4d8-2b10-4021-a6bb-f0cbc283a743.png)
+![Screenshot 2023-01-30 at 3 20 43 PM](https://user-images.githubusercontent.com/68337675/215608888-05db89da-e748-4e35-a992-097ae881a7b4.png)
+
+[**RETURN TO HOMEPAGE**](https://github.com/sfc-gh-mwies/rogers-hol-202406/tree/main)
