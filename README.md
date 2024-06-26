@@ -21,6 +21,9 @@
 
 ## Hands-On Lab Part 2
 
+### -- [Tasty Bytes Company Overview](https://github.com/sfc-gh-mwies/rogers-hol-202406/blob/main/TB_OVERVIEW.md) --
+📢 Review before continuing ☝️
+
 ### [02 - Data Governance](https://github.com/sfc-gh-mwies/rogers-hol-202406/tree/main/02%20-%20Governance)
 * Dynamic Data Masking and Row-Access Policies
 
